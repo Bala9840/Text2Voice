@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOICE OVER | Neural Synthesis Lab</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Syncopate:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-glow"></div>
+
+    <header>
+    </header>
+
+    <main>
+        <div class="hero">
+            <div class="title-container">
+                <h2 class="main-title">
+                    <span class="title-sonic">VOICE</span> <span class="title-alchemy">OVER</span>
+                </h2>
+            </div>
+
+            <div class="console-selector-container">
+                <div class="input-console">
+                    <div class="console-header">
+                        <span class="icon">⌨</span>
+                        <span>NEURAL INPUT CONSOLE</span>
+                    </div>
+                    <textarea id="textInput" placeholder="Initiate audio transcription protocol here..."></textarea>
+                    <div class="console-footer">
+                        <div class="controls">
+                            <button class="icon-btn">🎤</button>
+                            <button class="icon-btn">✨</button>
+                        </div>
+                        <div class="stats">
+                            <span id="charCount">0 / 2500 QUANTA</span>
+                            <button id="resetBtn">RESET</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="persona-section">
+                    <h3><span></span> SELECT PERSONA</h3>
+                    <div class="persona-grid">
+                        <div class="persona-card active" data-persona="aeon">
+                            <div class="avatar-container">
+                                <img src="assets/aeon.png" alt="Aeon">
+                            </div>
+                            <h4>AEON</h4>
+                            <p>PRIME NARRATOR</p>
+                        </div>
+                        <div class="persona-card" data-persona="lyra">
+                            <div class="avatar-container">
+                                <img src="assets/lyra.png" alt="Lyra">
+                            </div>
+                            <h4>LYRA</h4>
+                            <p>STORY WEAVER</p>
+                        </div>
+                        <div class="persona-card" data-persona="kael">
+                            <div class="avatar-container">
+                                <img src="assets/kael.png" alt="Kael">
+                            </div>
+                            <h4>KAEL</h4>
+                            <p>URBAN CORE</p>
+                        </div>
+                        <div class="persona-card" data-persona="nova">
+                            <div class="avatar-container">
+                                <img src="assets/nova.png" alt="Nova"
+                                    onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Nova'">
+                            </div>
+                            <h4>NOVA</h4>
+                            <p>ZEN ETHER</p>
+                        </div>
+                    </div>
+
+                    <div class="registry-section">
+                        <div class="registry-header">CORE NARRATOR REGISTRY</div>
+                        <div class="voice-selector-wrapper">
+                            <select id="voiceSelector">
+                                <optgroup label="US CORE">
+                                    <option value="aeon">AEON (Adam Prime)</option>
+                                    <option value="lyra">LYRA (Bella Weaver)</option>
+                                    <option value="kael">KAEL (Michael Core)</option>
+                                    <option value="nova">NOVA (Sky Zen)</option>
+                                </optgroup>
+                                <optgroup label="US PREMIUM">
+                                    <option value="heart">HEART (High Fidelity)</option>
+                                    <option value="alloy">ALLOY</option>
+                                    <option value="aoede">AOEDE</option>
+                                    <option value="jessica">JESSICA</option>
+                                    <option value="kore">KORE</option>
+                                    <option value="nicole">NICOLE</option>
+                                    <option value="sarah">SARAH</option>
+                                    <option value="river">RIVER (Soft)</option>
+                                </optgroup>
+                                <optgroup label="US CHARACTER">
+                                    <option value="echo">ECHO</option>
+                                    <option value="eric">ERIC</option>
+                                    <option value="fenrir">FENRIR</option>
+                                    <option value="liam">LIAM</option>
+                                    <option value="onyx">ONYX</option>
+                                    <option value="puck">PUCK (Playful)</option>
+                                    <option value="santa">SANTA</option>
+                                </optgroup>
+                                <optgroup label="UK ELITE">
+                                    <option value="emma">EMMA (Female)</option>
+                                    <option value="isabella">ISABELLA (Female)</option>
+                                    <option value="alice">ALICE (Female)</option>
+                                    <option value="lily">LILY (Female)</option>
+                                    <option value="george">GEORGE (Male)</option>
+                                    <option value="lewis">LEWIS (Male)</option>
+                                    <option value="daniel">DANIEL (Male)</option>
+                                    <option value="fable">FABLE (Dramatic)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="synthesizeBtn">
+                        <span class="icon">⚡</span> SYNTHESIZE AUDIO
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="output-panel" id="outputPanel" style="display: none;">
+            <div class="player-container">
+                <button class="play-btn" id="playBtn">
+                    <div class="play-icon"></div>
+                </button>
+                <div class="track-info">
+                    <h5 id="fileNameDisplay">PROJECT_ALPHA_SYNTHESIS_01.WAV</h5>
+                    <p>Neural Engine v4.0 • <span id="personaDisplay">Aeon</span> Persona • 44.1kHz High Fidelity</p>
+                    <div class="waveform-container">
+                        <canvas id="waveformCanvas"></canvas>
+                        <div class="progress-line"></div>
+                    </div>
+                </div>
+                <div class="player-meta">
+                    <div class="time"><span id="currentTime">00:00</span> / <span id="totalTime">00:00</span></div>
+                    <div class="actions">
+                        <button class="action-btn output-live">OUTPUT LIVE</button>
+                        <button class="action-btn export" id="downloadBtn">
+                            <span class="icon">↗</span> EXPORT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            <div class="os-indicator"></div>
+            <span>AUDIO LAB OS</span>
+        </div>
+        <div class="footer-center">
+            © 2024 NEURAL SYSTEMS INTELLIGENCE. ALL BANDWIDTH SECURED.
+        </div>
+        <div class="footer-right">
+            <a href="#">CORE PROTOCOL</a>
+            <a href="#">PRIVACY CIPHER</a>
+            <a href="#">SUPPORT NODE</a>
+        </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
