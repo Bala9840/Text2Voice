@@ -1,0 +1,31 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# General
+.DS_Store
+*.wav
+*.m4a
+*.npz
+
+# Models and Large Files (HuggingFace CDN handles these in prod)
+*.onnx
+*.bin
+*.pt
+
+# Netlify & Local Dev
+.netlify/
+dev_server_local.py
+
+# IDEs
+.vscode/
+.idea/
+
+# Virtual environments
+.venv
+venv
+python_env/
